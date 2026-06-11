@@ -6,9 +6,7 @@ param(
     [string]$Commit = "v1.0.1",
     [string]$SpecVersion = "1.0.1",
     [string]$WorktreeDir = "",
-    [string]$SourcePdf = "",
-    [string]$OutDir = "",
-    [switch]$PreferPdf
+    [string]$OutDir = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,7 +20,11 @@ if (-not (Test-Path $pythonScript)) {
 
 $python = $env:PYTHON
 if ([string]::IsNullOrWhiteSpace($python)) {
-    $python = "python3"
+    if (Get-Command py -ErrorAction SilentlyContinue) {
+        $python = "py"
+    } else {
+        $python = "python3"
+    }
 }
 
 $pythonArgs = @($pythonScript, "--commit", $Commit)
@@ -39,16 +41,8 @@ if (-not [string]::IsNullOrWhiteSpace($WorktreeDir)) {
     $pythonArgs += @("--worktree-dir", $WorktreeDir)
 }
 
-if (-not [string]::IsNullOrWhiteSpace($SourcePdf)) {
-    $pythonArgs += @("--source-pdf", $SourcePdf)
-}
-
 if (-not [string]::IsNullOrWhiteSpace($OutDir)) {
     $pythonArgs += @("--out-dir", $OutDir)
-}
-
-if ($PreferPdf) {
-    $pythonArgs += "--prefer-pdf"
 }
 
 & $python @pythonArgs

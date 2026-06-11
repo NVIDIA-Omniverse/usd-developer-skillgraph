@@ -31,7 +31,7 @@ Generated implementations belong under `generated/`, are disposable, and are `.g
 graph/          skill graph, executable manifest, and target scopes
 skills/         skill instructions per graph node
 contracts/      implementation-neutral output contracts (handles, capabilities, performance, spec-coverage)
-goldens/        manually authored conformance cases
+goldens/        manually authored compliance cases
 harness/        scoring, benchmark, and regeneration drivers
 benchmarks/     benchmark target definitions and fixtures
 generated/      disposable generated targets (gitignored)

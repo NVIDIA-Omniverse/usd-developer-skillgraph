@@ -9,9 +9,7 @@ python_bin="${PYTHON:-python3}"
 commit="v1.0.1"
 source_repo=""
 worktree_dir=""
-source_pdf=""
 out_dir=""
-prefer_pdf=0
 passthrough=()
 
 usage() {
@@ -22,10 +20,9 @@ Usage:
 Options:
   --source-repo PATH     Local aousd/specifications-public checkout.
   --commit REF           Spec tag or commit to pin.
+  --spec-version VERSION Core Spec version directory. Defaults to 1.0.1.
   --worktree-dir PATH    Detached worktree directory.
-  --source-pdf PATH      USD Core Spec PDF fallback.
   --out-dir PATH         Output directory. Defaults to spec/pinned.
-  --prefer-pdf           Use the PDF fallback even with a source repo.
   -h, --help             Show this help.
 
 The PYTHON environment variable overrides the Python executable; otherwise
@@ -55,24 +52,20 @@ while [[ $# -gt 0 ]]; do
             commit="$2"
             shift 2
             ;;
+        --spec-version)
+            need_value "$@"
+            passthrough+=("$1" "$2")
+            shift 2
+            ;;
         --worktree-dir)
             need_value "$@"
             worktree_dir="$2"
-            shift 2
-            ;;
-        --source-pdf)
-            need_value "$@"
-            source_pdf="$2"
             shift 2
             ;;
         --out-dir)
             need_value "$@"
             out_dir="$2"
             shift 2
-            ;;
-        --prefer-pdf)
-            prefer_pdf=1
-            shift
             ;;
         -h|--help)
             usage
@@ -100,16 +93,8 @@ if [[ -n "$worktree_dir" ]]; then
     python_args+=("--worktree-dir" "$worktree_dir")
 fi
 
-if [[ -n "$source_pdf" ]]; then
-    python_args+=("--source-pdf" "$source_pdf")
-fi
-
 if [[ -n "$out_dir" ]]; then
     python_args+=("--out-dir" "$out_dir")
-fi
-
-if [[ "$prefer_pdf" -eq 1 ]]; then
-    python_args+=("--prefer-pdf")
 fi
 
 python_args+=("${passthrough[@]}")

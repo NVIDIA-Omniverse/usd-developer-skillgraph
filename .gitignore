@@ -1,5 +1,0 @@
-spec/pinned/
-.spec-worktrees/
-__pycache__/
-*.pyc
-generated/
